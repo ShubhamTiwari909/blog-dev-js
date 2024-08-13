@@ -18,7 +18,6 @@ export default function NavbarComponent({ className }: { className: string }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const updateUser = useMarkdownStore((state) => state.updateUser);
   const user = useMarkdownStore((state) => state.user);
-  console.log(user)
 
   const menuItems = [
     "Profile",
