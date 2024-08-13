@@ -1,0 +1,11 @@
+# Ignore artifacts:
+node_modules/
+.next/
+.gitignore
+.prettierignore
+.next-env.d.ts
+package.json
+package-lock.json
+postcss-config.mjs
+README.md
+tsconfig.json
