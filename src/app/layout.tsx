@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NextUIProvider>
-          <NavbarComponent className="dark text-foreground bg-background" />
+          <NavbarComponent className="dark text-foreground bg-slate-900" />
           <main className="dark text-foreground bg-background">{children}</main>
         </NextUIProvider>
       </body>

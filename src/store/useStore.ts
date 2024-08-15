@@ -1,4 +1,3 @@
-import { IdTokenResult } from "firebase/auth";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -19,6 +18,8 @@ type Store =  {
   updateBlogTitle: (blogTitle: string) => void;
   blogUrl: string;
   updateBlogUrl: (blogUrl: string) => void;
+  tags: string[];
+  updateTags: (tags: string[]) => void;
 }
 
 export const useMarkdownStore = create<Store>()(
@@ -31,13 +32,15 @@ export const useMarkdownStore = create<Store>()(
           email: null,
           photoURL: null,
         },
-        updateUser: (user: User) => set({ user }),
+        updateUser: (user: User) => set(() => ({ user })), // Change to using a callback to avoid resetting the store
         markdown: "",
-        updateMarkdown: (markdown) => set({ markdown }),
+        updateMarkdown: (markdown) => set(() => ({ markdown })), // Change to using a callback to avoid resetting the store
         blogTitle: "",
-        updateBlogTitle: (blogTitle) => set({ blogTitle }),
+        updateBlogTitle: (blogTitle) => set(() => ({ blogTitle })), // Change to using a callback to avoid resetting the store
         blogUrl: "",
-        updateBlogUrl: (blogUrl) => set({ blogUrl }),
+        updateBlogUrl: (blogUrl) => set(() => ({ blogUrl })), // Change to using a callback to avoid resetting the store
+        tags: [""],
+        updateTags: (tags) => set(() => ({ tags })), // Change to using a callback to avoid resetting the store
       }),
       {
         name: "markdown",

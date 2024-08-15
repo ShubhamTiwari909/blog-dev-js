@@ -1,0 +1,1 @@
+export const TagsData = ["HTML","CSS","JS","REACT","NEXT JS","TAILWIND","WEB DEV","FRONTEND","BACKEND","FULLSTACK"]

@@ -6,7 +6,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(accordion|autocomplete|avatar|badge|button|card|checkbox|chip|dropdown|input|listbox|modal|navbar|progress|radio|skeleton|toggle|tabs|user|divider|ripple|spinner|popover|scroll-shadow|menu).js",
+    "./node_modules/@nextui-org/theme/dist/components/(accordion|autocomplete|avatar|badge|button|card|checkbox|chip|dropdown|input|listbox|modal|navbar|progress|radio|skeleton|toggle|tabs|user|divider|ripple|spinner|popover|scroll-shadow|menu|select).js",
   ],
   theme: {
     extend: {
