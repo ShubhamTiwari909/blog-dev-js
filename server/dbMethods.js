@@ -13,3 +13,7 @@ export const writeBlogsToDb = async (blog, onSuccess) => {
     console.error("Error adding document: ", e);
   }
 };
+
+export const editBlogToDb = async (blog, onSuccess) => {
+  
+};
