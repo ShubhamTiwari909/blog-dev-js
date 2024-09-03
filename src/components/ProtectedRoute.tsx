@@ -1,3 +1,4 @@
+"use client";
 import { useMarkdownStore } from "@/store/useStore";
 import { useRouter } from "next/navigation";
 import React, { useLayoutEffect } from "react";
