@@ -19,6 +19,7 @@ export default function NavbarComponent({ className }: { className: string }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const updateUser = useMarkdownStore((state) => state.updateUser);
   const user = useMarkdownStore((state) => state.user);
+  const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
   const router = useRouter();
 
   const menuItems = ["Profile", "Log Out"];
@@ -30,7 +31,7 @@ export default function NavbarComponent({ className }: { className: string }) {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand>BlogDev.js</NavbarBrand>
+        <NavbarBrand><Link href="/">BlogDev.js</Link></NavbarBrand>
       </NavbarContent>
 
       <NavbarContent justify="end">
@@ -63,8 +64,20 @@ export default function NavbarComponent({ className }: { className: string }) {
                 color="primary"
                 href="/create-blog"
                 variant="flat"
+                onClick={() => updateBlogId("")}
               >
                 Create
+              </Button>
+            </NavbarItem>
+            <NavbarItem>
+              <Button
+                as={Link}
+                color="primary"
+                href="/profile"
+                variant="flat"
+                onClick={() => updateBlogId("")}
+              >
+                Profile
               </Button>
             </NavbarItem>
             <NavbarItem className="hidden md:block">

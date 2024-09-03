@@ -1,4 +1,3 @@
-"use client"
 import CreateBlog from "@/components/CreateBlog";
 import React from "react";
 
