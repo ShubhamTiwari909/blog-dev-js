@@ -24,7 +24,7 @@ const Tags = ({
       selectionMode="multiple"
       selectedKeys={tags}
       isInvalid={tagError}
-      errorMessage="Please enter title"
+      errorMessage="Please select tags"
       onClick={() => {
         setTagError(false);
       }}

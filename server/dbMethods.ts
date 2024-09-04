@@ -8,6 +8,7 @@ import {
   query,
   QueryFieldFilterConstraint,
   updateDoc,
+  getDoc,
   where,
 } from "firebase/firestore";
 import { app } from "./firebaseConfig";
@@ -72,6 +73,16 @@ export const getBlogsFromDb = async (
 
 export const getUserBlogsFromDb = async (userId: string) => {
   const results = getBlogsFromDb(where("userId", "==", userId));
+  return results;
+};
+
+export const getBlogPageData = async (blogUrl: string) => {
+  const q = query(collection(db, "blogs"), where("blogUrl", "==", blogUrl));
+  const querySnapshot = await getDocs(q);
+  const results = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...(doc.data() as Blog),
+  }));
   return results;
 };
 

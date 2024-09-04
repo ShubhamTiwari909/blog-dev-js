@@ -1,4 +1,3 @@
-import { useMarkdownStore } from "@/store/useStore";
 import { Input } from "@nextui-org/input";
 import React from "react";
 
@@ -13,26 +12,49 @@ const FileUpload = ({
   fileError: boolean;
   setFileError: (fileError: boolean) => void;
 }) => {
+  const [fileSizeError, setFileSizeError] = React.useState(false);
   return (
     <Input
       onChange={(e) => {
         if (e.target.files) {
-          setFile(e.target.files[0]);
-          if (fileError || !e.target.files[0]) setFileError(false);
+          const selectedFile = e.target.files?.[0];
+          const fileSize = selectedFile?.size / 1024 / 1024;
+
+          if (!selectedFile) {
+            // If no file is selected, set the file error to true
+            setFileError(true);
+            setFileSizeError(false);
+          } else if (fileSize > 2) {
+            // If the file size is greater than 2MB, set the file size error to true
+            setFileError(true);
+            setFileSizeError(true);
+          } else {
+            // If the file size is valid, set the file errors to false
+            setFileError(false);
+            setFileSizeError(false);
+          }
+          setFile(selectedFile);
         }
       }}
       onBlur={() => {
-        if (!file) setFileError(true);
-        else setFileError(false);
+        if (!file || fileSizeError) setFileError(true);
+        else {
+          setFileError(false);
+          setFileSizeError(false);
+        }
       }}
       isRequired
       size="md"
       variant="faded"
       isInvalid={fileError}
-      errorMessage="Please choose an image"
+      errorMessage={
+        fileSizeError
+          ? "File size should not exceed 2MB"
+          : "Please choose an image"
+      }
       className="lg:w-60 cursor-pointer lg:mt-2 file:bg-blue-800"
       type="file"
-      accept="image/*"
+      accept="image/png, image/jpeg"
     />
   );
 };

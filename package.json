@@ -34,6 +34,7 @@
     "@uiw/react-md-editor": "^4.0.4",
     "firebase": "^10.12.5",
     "framer-motion": "^11.3.24",
+    "katex": "^0.16.11",
     "lucide": "^0.433.0",
     "lucide-react": "^0.436.0",
     "marked": "^14.0.0",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@types/dom-to-image": "^2.6.7",
+    "@types/katex": "^0.16.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
