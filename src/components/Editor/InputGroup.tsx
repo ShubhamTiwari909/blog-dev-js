@@ -88,7 +88,7 @@ const InputGroup = ({
       editBlogToDb(blog, blogId).then(() => {
         formReset();
         setLoading(false);
-        // router.push(`/blog/${blogUrl}`);
+        router.push(`/blogs/${blogUrl}`);
       });
     };
     if (!titleError && !tagError && !markdownError) {
@@ -128,7 +128,7 @@ const InputGroup = ({
             writeBlogsToDb(blog as Blog).then(() => {
               setLoading(false);
               formReset();
-              // router.push(`/blog/${blogUrl}`);
+              router.push(`/blogs/${blogUrl}`);
             });
           });
         }

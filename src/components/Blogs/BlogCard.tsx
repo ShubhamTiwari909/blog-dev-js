@@ -64,7 +64,7 @@ const BlogCard = ({
       </div>
       <Link
         className="text-sm ml-4 mb-6 inline-block px-6 py-2 rounded-full bg-blue-400 text-white group-hover/blogcard:bg-blue-700 transition-all duration-200 ease-in-out"
-        href={`/blog/${blogUrl}`}
+        href={`/blogs/${blogUrl}`}
       >
         Read Blog
       </Link>

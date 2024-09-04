@@ -3,6 +3,11 @@ export const geneteBlogUrl = (
   blogTitle: string,
 ): void => {
   updateBlogUrl(
-    `${blogTitle.toLocaleLowerCase().replaceAll(" ", "-").trim().slice(0, 20)}-${Math.floor(Math.random() * 1000000000)}`,
+    `${blogTitle
+      .toLocaleLowerCase()
+      .replaceAll(/\s+/g, "-")
+      .replaceAll(/[^a-zA-Z0-9\s]/g, "")
+      .trim()
+      .slice(0, 20)}-${Math.floor(Math.random() * 1000000000)}`,
   );
 };
