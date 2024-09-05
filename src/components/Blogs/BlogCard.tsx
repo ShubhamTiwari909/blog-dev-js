@@ -7,6 +7,7 @@ import Link from "next/link";
 import React from "react";
 import { deleteImage } from "../../../server/storage";
 import { deleteBlogFromDb } from "../../../server/dbMethods";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const BlogCard = ({
   blog,
@@ -34,7 +35,19 @@ const BlogCard = ({
   const updateImage = useMarkdownStore((state) => state.updateImage);
   const updateTags = useMarkdownStore((state) => state.updateTags);
   const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
-  const updateBlogList = useMarkdownStore((state) => state.updateBlogList);
+
+  // Access the client
+  const queryClient = useQueryClient();
+
+  // Mutations
+  const mutation = useMutation({
+    mutationFn: () => deleteBlogFromDb(id),
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+      deleteImage(image.name);
+    },
+  });
 
   return (
     <li className="group/blogcard relative flex flex-col items-start justify-between overflow-hidden hover:bg-slate-100 transition-all duration-200 ease-in-out min-w-56 flex-1 lg:flex-auto  rounded-xl border border-blue-400">
@@ -103,9 +116,7 @@ const BlogCard = ({
                 color="danger"
                 className="w-fit"
                 onClick={() => {
-                  deleteBlogFromDb(id).then(() => {
-                    deleteImage(image.name, updateBlogList);
-                  });
+                  mutation.mutate();
                 }}
               >
                 <Trash2 size="1rem" />
