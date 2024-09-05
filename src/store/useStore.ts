@@ -37,8 +37,6 @@ type Store = {
   updateImage: (image: { name: string; url: string }) => void;
   tags: string[];
   updateTags: (tags: string[]) => void;
-  blogList: Blog[];
-  updateBlogList: (blogs: Blog[]) => void;
   blogId: string;
   updateBlogId: (updateBlog: string) => void;
 };
@@ -64,8 +62,6 @@ export const useMarkdownStore = create<Store>()(
         updateImage: (image) => set(() => ({ image })), // Change to using a callback to avoid resetting the store
         tags: [""],
         updateTags: (tags) => set(() => ({ tags })), // Change to using a callback to avoid resetting the store
-        blogList: [],
-        updateBlogList: (blogList) => set(() => ({ blogList })),
         blogId: "",
         updateBlogId: (blogId) => set(() => ({ blogId })), // Change to using a callback to avoid resetting the store
       }),

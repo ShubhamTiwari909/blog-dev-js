@@ -22,16 +22,45 @@ export default function NavbarComponent({ className }: { className: string }) {
   const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
   const router = useRouter();
 
-  const menuItems = ["Profile", "Log Out"];
-
+  const menuItems = [
+    {
+      text: "Profile",
+      href: "/profile",
+      render: user?.uid,
+    },
+    {
+      text: "Sign Out",
+      render: user?.uid,
+      onClick: () => {
+        logOut().then(() => {
+          updateUser({
+            uid: "",
+            displayName: "",
+            email: "",
+            photoURL: "",
+          });
+          router.push("/");
+        });
+        setIsMenuOpen(false);
+      },
+    },
+  ];
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} className={className}>
+    <Navbar
+      onMenuOpenChange={setIsMenuOpen}
+      isMenuOpen={isMenuOpen}
+      className={className}
+    >
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand><Link href="/">BlogDev.js</Link></NavbarBrand>
+        <NavbarBrand>
+          <Link href="/" onClick={() => setIsMenuOpen(false)}>
+            BlogDev.js
+          </Link>
+        </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent justify="end">
@@ -75,7 +104,10 @@ export default function NavbarComponent({ className }: { className: string }) {
                 color="primary"
                 href="/profile"
                 variant="flat"
-                onClick={() => updateBlogId("")}
+                onClick={() => {
+                  updateBlogId("");
+                  setIsMenuOpen(false);
+                }}
               >
                 Profile
               </Button>
@@ -106,13 +138,21 @@ export default function NavbarComponent({ className }: { className: string }) {
       </NavbarContent>
       <NavbarMenu className="bg-slate-900/60 text-slate-100 pt-10 space-y-5">
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <Link
-              className={`w-full ${item === "Log Out" ? "text-red-500" : ""}`}
-              href="#"
-            >
-              {item}
-            </Link>
+          <NavbarMenuItem key={`${item.text}-${index}`}>
+            {item?.render &&
+              (item.href ? (
+                <Link
+                  className={`w-full`}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.text}
+                </Link>
+              ) : (
+                <Button color="danger" onClick={item.onClick}>
+                  Log out
+                </Button>
+              ))}
           </NavbarMenuItem>
         ))}
       </NavbarMenu>

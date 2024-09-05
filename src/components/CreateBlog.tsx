@@ -12,6 +12,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Loading from "@/app/loading";
 import { TextState } from "@uiw/react-md-editor";
 import { TextAreaTextApi } from "@uiw/react-md-editor";
+import BlogWrapper from "./Blogs/BlogWrapper";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -55,19 +56,21 @@ export default function CreateBlog() {
         api.replaceSelection(modifyText);
       },
     };
-  }
+  };
 
   return (
     <ProtectedRoute>
       <section className="min-h-screen py-20 px-6 lg:px-16">
-        <InputGroup
-          markdownError={markdownError}
-          setMarkdownError={setMarkdownError}
-          setLoading={setLoading}
-        />
+        <BlogWrapper>
+          <InputGroup
+            markdownError={markdownError}
+            setMarkdownError={setMarkdownError}
+            setLoading={setLoading}
+          />
+        </BlogWrapper>
         <div className="container mb-10 mx-auto [&_.w-md-editor-toolbar]:p-3 [&_.w-md-editor-toolbar_li>button]:p-1 [&_.w-md-editor-toolbar_ul]:flex [&_.w-md-editor-toolbar_ul]:flex-wrap [&_.w-md-editor-toolbar_ul:first-child]:mb-4 [&_.w-md-editor-toolbar_ul]:gap-2 [&_.w-md-editor-toolbar-divider]:!mt-1 [&_.w-md-editor-toolbar-divider]:h-5 [&_.w-md-editor-toolbar_button_svg]:w-5 [&_.w-md-editor-toolbar_button_svg]:h-5">
           <MDEditor
-            className={`mdx-editor border transition-all duration-200 ease-in rounded-3xl [&_ul]:list-disc [&_p>span#user-content-hello]:text-red-500 [&_ol]:list-decimal [&_div#user-content-custom-flex-container]:flex [&_div#user-content-custom-flex-container]:gap-3 ${customBtnClasses} ${markdownError ? "focus-within:border-red-600 border-red-600" : "focus-within:border-sky-600 border-sky-600"}`}
+            className={`mdx-editor border transition-all duration-200 ease-in rounded-3xl [&_ul]:list-disc [&_p>span#user-content-hello]:text-red-500 [&_ol]:list-decimal [&_div#user-content-custom-flex-container]:flex [&_div#user-content-custom-flex-container]:gap-3 [&_div#user-content-custom-flex-container]:flex-wrap ${customBtnClasses} ${markdownError ? "focus-within:border-red-600 border-red-600" : "focus-within:border-sky-600 border-sky-600"}`}
             height={550}
             value={markdown}
             onChange={(value) => {

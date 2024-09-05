@@ -14,7 +14,6 @@ const PublishCancel = ({
   fileError,
   setFileError,
   formReset,
-  setLoading,
 }: {
   titleError: boolean;
   tagError: boolean;
@@ -25,7 +24,6 @@ const PublishCancel = ({
   fileError: boolean;
   setFileError: (fileError: boolean) => void;
   formReset: () => void;
-  setLoading: (loading: boolean) => void;
 }) => {
   const blogTitle = useMarkdownStore((state) => state.blogTitle);
   const tags = useMarkdownStore((state) => state.tags);
@@ -48,7 +46,6 @@ const PublishCancel = ({
           setMarkdownError(markdown === "");
           if (!titleError && !tagError && !fileError) {
             geneteBlogUrl(updateBlogUrl, blogTitle);
-            setLoading(true);
           }
         }}
       >

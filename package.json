@@ -31,6 +31,7 @@
     "@nextui-org/tabs": "^2.0.35",
     "@nextui-org/theme": "^2.2.9",
     "@nextui-org/user": "^2.0.33",
+    "@tanstack/react-query": "^5.54.1",
     "@uiw/react-md-editor": "^4.0.4",
     "firebase": "^10.12.5",
     "framer-motion": "^11.3.24",
@@ -45,6 +46,7 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.53.0",
     "@types/dom-to-image": "^2.6.7",
     "@types/katex": "^0.16.7",
     "@types/node": "^20",

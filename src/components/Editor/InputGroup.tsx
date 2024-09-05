@@ -6,7 +6,9 @@ import BlogTitle from "./BlogTitle";
 import PublishCancel from "./PublishCancel";
 import Tags from "./Tags";
 import FileUpload from "./FileUpload";
-import { deleteImage } from "../../../server/storage";
+import { deleteImage, uploadImage } from "../../../server/storage";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { editBlogToDb, writeBlogsToDb } from "../../../server/dbMethods";
 
 type Blog = {
   userId: string | null;
@@ -46,7 +48,6 @@ const InputGroup = ({
   const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
   const image = useMarkdownStore((state) => state.image);
   const updateImage = useMarkdownStore((state) => state.updateImage);
-  const updateBlogList = useMarkdownStore((state) => state.updateBlogList);
   const user = useMarkdownStore((state) => state.user);
   const router = useRouter();
 
@@ -64,83 +65,104 @@ const InputGroup = ({
     setFile(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const blogHandler = async ({
-      name,
-      url,
-    }: {
-      name: string;
-      url: string;
-    }) => {
-      const { editBlogToDb } = await import("../../../server/dbMethods");
+  const blogHandler = async ({ name, url }: { name: string; url: string }) => {
+    const { editBlogToDb } = await import("../../../server/dbMethods");
+    const blog = {
+      userId: user.uid,
+      blogTitle,
+      blogUrl,
+      image: {
+        name,
+        url,
+      },
+      tags,
+      markdown,
+    };
+    editBlogToDb(blog, blogId).then(() => {
+      formReset();
+      router.push(`/blogs/${blogUrl}`);
+    });
+  };
+
+  // Access the client
+  const queryClient = useQueryClient();
+
+  const mutationCreateBlog = useMutation({
+    mutationFn: (blog: Blog) => writeBlogsToDb(blog),
+    onSuccess: () => {
+      formReset();
+      setTimeout(() => {
+        router.push(`/blogs/${blogUrl}`);
+      }, 100);
+    },
+  });
+
+  const mutationUpdateBlog = useMutation({
+    mutationFn: (blog: Blog) => editBlogToDb(blog, blogId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs", user.uid] });
+    },
+  });
+
+  const mutationUploadImage = useMutation({
+    mutationFn: () => uploadImage(file),
+    onSuccess: async (url) => {
       const blog = {
         userId: user.uid,
         blogTitle,
         blogUrl,
         image: {
-          name,
-          url,
+          name: file?.name,
+          url: url || "",
         },
         tags,
         markdown,
       };
-      editBlogToDb(blog, blogId).then(() => {
-        formReset();
-        setLoading(false);
-        router.push(`/blogs/${blogUrl}`);
-      });
-    };
-    if (!titleError && !tagError && !markdownError) {
       if (blogId) {
-        if (!file) {
-          setFileError(false);
-          setMarkdownError(false);
-          blogHandler(image);
-        } else {
-          const { uploadImage } = await import("../../../server/storage");
-          uploadImage(file).then(async (url) => {
-            deleteImage(image.name, updateBlogList);
-            blogHandler({
-              name: file.name,
-              url: url || "",
-            });
-          });
-        }
+        mutationUpdateBlog.mutate(blog as Blog);
+        queryClient.invalidateQueries({ queryKey: ["blogs", user.uid] });
+        deleteImage(image.name);
+        blogHandler({
+          name: file?.name || "",
+          url: url || "",
+        });
       } else {
-        if (!fileError) {
-          const { uploadImage } = await import("../../../server/storage");
-          uploadImage(file).then(async (url) => {
-            const blog = {
-              userId: user.uid,
-              blogTitle,
-              blogUrl,
-              image: {
-                name: file?.name,
-                url: url || "",
-              },
-              tags,
-              markdown,
-            };
-            const { writeBlogsToDb } = await import(
-              "../../../server/dbMethods"
-            );
-            writeBlogsToDb(blog as Blog).then(() => {
-              setLoading(false);
-              formReset();
-              router.push(`/blogs/${blogUrl}`);
-            });
-          });
+        mutationCreateBlog.mutate(blog as Blog);
+      }
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      if (!titleError && !tagError && !markdownError) {
+        if (blogId) {
+          if (!file) {
+            setFileError(false);
+            setMarkdownError(false);
+            blogHandler(image);
+          } else {
+            mutationUploadImage.mutate();
+          }
+        } else {
+          if (!fileError) {
+            mutationUploadImage.mutate();
+          }
         }
       }
-    }
+    },
+  });
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    mutation.mutate();
   };
 
   return (
     <div className="container mx-auto mb-10">
       <form
         className="flex items-stretch justify-between flex-wrap gap-5 mb-5"
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
         <div className="mb-3 flex flex-col lg:flex-row gap-5">
           <BlogTitle titleError={titleError} setTitleError={setTitleError} />
@@ -154,7 +176,6 @@ const InputGroup = ({
             fileError={fileError}
             setFileError={setFileError}
             formReset={formReset}
-            setLoading={setLoading}
           />
         </div>
         <Tags tagError={tagError} setTagError={setTagError} />

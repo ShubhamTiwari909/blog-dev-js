@@ -39,13 +39,10 @@ export const uploadImage = async (image: File | null) => {
 
 export const deleteImage = async (
   imageURL: string,
-  updateBlogs: (blogs: Blog[]) => void,
 ) => {
   const storageRef = ref(storage, `images/${imageURL}`);
   try {
     await deleteObject(storageRef);
-    const blogs: Blog[] = await getBlogsFromDb(null);
-    updateBlogs(blogs);
   } catch (error) {
     throw error;
   }
