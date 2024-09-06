@@ -1,9 +1,9 @@
 "use client";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MDEditor from "@uiw/react-md-editor";
 import React from "react";
 
+// Button classes to render in markdown preview
 const customBtnClasses =
   "[&_div#custom-link-container>a]:my-2 [&_div#custom-link-container>a]:no-underline [&_div#custom-link-container>a]:inline-block [&_div#custom-link-container>a]:px-4 [&_div#custom-link-container>a]:py-2 [&_div#custom-link-container>a]:rounded-xl [&_div#custom-link-container>a#custom-link-red]:bg-red-500 [&_div#custom-link-container>a#custom-link-green]:bg-green-500 [&_div#custom-link-container>a#custom-link-yellow]:bg-yellow-500 [&_div#custom-link-container>a#custom-link-pink]:bg-pink-500 [&_div#custom-link-container>a#custom-link-purple]:bg-purple-500 [&_div#custom-link-container>a#custom-link-blue]:bg-blue-500 [&_div#custom-link-container>a]:text-white";
 

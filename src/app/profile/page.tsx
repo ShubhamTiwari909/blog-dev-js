@@ -1,8 +1,5 @@
-"use client";
 import ProfileSection from "@/components/ProfileSection";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import {  Progress } from "@nextui-org/progress";
-import React from "react";
 
 const Profile = () => {
   return (

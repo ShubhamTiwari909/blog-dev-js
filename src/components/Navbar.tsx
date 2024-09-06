@@ -16,12 +16,31 @@ import { useMarkdownStore } from "@/store/useStore";
 import { useRouter } from "next/navigation";
 
 export default function NavbarComponent({ className }: { className: string }) {
+  // Local state
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  // Global state and its setter method
   const updateUser = useMarkdownStore((state) => state.updateUser);
   const user = useMarkdownStore((state) => state.user);
   const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
+
+  // Router for handling route dynamically
   const router = useRouter();
 
+  const signOut = () => {
+    logOut().then(() => {
+      updateUser({
+        uid: "",
+        displayName: "",
+        email: "",
+        photoURL: "",
+      });
+      router.push("/");
+    });
+    setIsMenuOpen(false);
+  };
+
+  // Mobile menu links
   const menuItems = [
     {
       text: "Profile",
@@ -31,20 +50,10 @@ export default function NavbarComponent({ className }: { className: string }) {
     {
       text: "Sign Out",
       render: user?.uid,
-      onClick: () => {
-        logOut().then(() => {
-          updateUser({
-            uid: "",
-            displayName: "",
-            email: "",
-            photoURL: "",
-          });
-          router.push("/");
-        });
-        setIsMenuOpen(false);
-      },
+      onClick: signOut,
     },
   ];
+
   return (
     <Navbar
       onMenuOpenChange={setIsMenuOpen}
@@ -118,17 +127,7 @@ export default function NavbarComponent({ className }: { className: string }) {
                 color="danger"
                 href="#"
                 variant="flat"
-                onClick={() => {
-                  logOut().then(() => {
-                    updateUser({
-                      uid: "",
-                      displayName: "",
-                      email: "",
-                      photoURL: "",
-                    }),
-                      router.push("/");
-                  });
-                }}
+                onClick={signOut}
               >
                 Logout
               </Button>

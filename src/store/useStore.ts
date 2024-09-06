@@ -8,19 +8,6 @@ type User = {
   photoURL: string | null;
 };
 
-type Blog = {
-  id: string;
-  userId: string | null;
-  blogTitle: string;
-  blogUrl: string;
-  image: {
-    name: string;
-    url: string;
-  };
-  tags: string[];
-  markdown: string;
-};
-
 type Store = {
   user: User;
   updateUser: (user: User) => void;

@@ -29,7 +29,7 @@ const FileUpload = ({
             setFileError(true);
             setFileSizeError(true);
           } else {
-            // If the file size is valid, set the file errors to false
+            // If there is a file and the file size is valid, set the file errors and the file size error to false
             setFileError(false);
             setFileSizeError(false);
           }
@@ -51,10 +51,10 @@ const FileUpload = ({
         fileSizeError
           ? "File size should not exceed 2MB"
           : "Please choose an image"
-      }
+      } // Conditionally showing error message based on fileSizeError state
       className="lg:w-60 cursor-pointer lg:mt-2 file:bg-blue-800"
       type="file"
-      accept="image/png, image/jpeg"
+      accept="image/png, image/jpeg" // Accepting only PNG and JPEG files
     />
   );
 };

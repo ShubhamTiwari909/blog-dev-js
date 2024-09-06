@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavbarComponent from "@/components/Navbar";
 import { NextUIProvider } from "@nextui-org/react";
+import QueryClientWrapper from "@/components/Blogs/QueryClientWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NextUIProvider>
-          <NavbarComponent className="dark text-foreground bg-slate-900" />
-          <main className="dark text-foreground bg-background min-h-screen">{children}</main>
-        </NextUIProvider>
+        <QueryClientWrapper>
+          <NextUIProvider>
+            <NavbarComponent className="dark text-foreground bg-slate-900" />
+            <main className="dark text-foreground bg-background min-h-screen">
+              {children}
+            </main>
+          </NextUIProvider>
+        </QueryClientWrapper>
       </body>
     </html>
   );
