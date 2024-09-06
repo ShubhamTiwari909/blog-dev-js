@@ -8,27 +8,23 @@ import React from "react";
 import { deleteImage } from "../../../server/storage";
 import { deleteBlogFromDb } from "../../../server/dbMethods";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { BlogSchema } from "@/types/blog";
 
 const BlogCard = ({
   blog,
   userId,
 }: {
-  blog: {
-    blogTitle: string;
-    blogUrl: string;
-    image: {
-      name: string;
-      url: string;
-    };
-    markdown: string;
-    tags: string[];
-    id: string;
-  };
+  blog: BlogSchema;
   userId?: string | null;
 }) => {
+
+  // Destructured blog properties
   const { blogTitle, blogUrl, image, markdown, tags, id } = blog;
+
+  // Local state to toggle the settings of a blog card
   const [open, setOpen] = React.useState(false);
 
+  // Global states
   const updateMarkdown = useMarkdownStore((state) => state.updateMarkdown);
   const updateBlogTitle = useMarkdownStore((state) => state.updateBlogTitle);
   const updateBlogUrl = useMarkdownStore((state) => state.updateBlogUrl);
@@ -36,18 +32,30 @@ const BlogCard = ({
   const updateTags = useMarkdownStore((state) => state.updateTags);
   const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
 
-  // Access the client
+  // Accessing the query client
   const queryClient = useQueryClient();
 
-  // Mutations
+  // Mutation for deleting a blog and updating the blogs list
   const mutation = useMutation({
-    mutationFn: () => deleteBlogFromDb(id),
+    mutationFn: () => deleteBlogFromDb(id as string),
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+
+      // Deleting thumbnail image from DB
       deleteImage(image.name);
     },
   });
+
+  // Updating form fields with the blog current data
+  const updateBlogFormValues = () => {
+    updateMarkdown(markdown);
+    updateBlogTitle(blogTitle);
+    updateBlogUrl(blogUrl);
+    updateImage(image);
+    updateTags(tags);
+    updateBlogId(id as string);
+  };
 
   return (
     <li className="group/blogcard relative flex flex-col items-start justify-between overflow-hidden hover:bg-slate-100 transition-all duration-200 ease-in-out min-w-56 flex-1 lg:flex-auto  rounded-xl border border-blue-400">
@@ -97,17 +105,7 @@ const BlogCard = ({
           {open ? (
             <div className="flex gap-3 flex-col p-2.5 bg-white rounded-xl">
               <Button size="sm" color="primary" className="w-fit">
-                <Link
-                  href="/create-blog"
-                  onClick={() => {
-                    updateMarkdown(markdown);
-                    updateBlogTitle(blogTitle);
-                    updateBlogUrl(blogUrl);
-                    updateImage(image);
-                    updateTags(tags);
-                    updateBlogId(id);
-                  }}
-                >
+                <Link href="/create-blog" onClick={updateBlogFormValues}>
                   <FilePenLine size="1rem" />
                 </Link>
               </Button>

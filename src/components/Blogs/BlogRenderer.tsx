@@ -7,9 +7,10 @@ import { getBlogPageData } from "../../../server/dbMethods";
 import { Skeleton } from "@nextui-org/skeleton";
 
 const BlogRenderer = ({ blogUrl }: { blogUrl: string }) => {
-  // Queries
+
+  // Query for fetching specific blog page data with the blog as query key
   const query = useQuery({
-    queryKey: ["blog"],
+    queryKey: ["blog", blogUrl],
     queryFn: () => getBlogPageData(blogUrl.replace("/blogs/", "")),
   });
 

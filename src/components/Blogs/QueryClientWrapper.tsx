@@ -1,12 +1,11 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import BlogRenderer from "./BlogRenderer";
 
-// Create a client
+// Create a client for the entire app
 const queryClient = new QueryClient();
 
-const BlogWrapper = ({
+const QueryClientWrapper = ({
   children,
 }: {
   children: React.ReactNode;
@@ -16,4 +15,4 @@ const BlogWrapper = ({
   );
 };
 
-export default BlogWrapper;
+export default QueryClientWrapper;

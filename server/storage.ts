@@ -6,22 +6,8 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { app } from "./firebaseConfig";
-import { getBlogsFromDb } from "./dbMethods";
 
 const storage = getStorage(app);
-
-type Blog = {
-  id: string;
-  userId: string | null;
-  blogTitle: string;
-  blogUrl: string;
-  image: {
-    name: string;
-    url: string;
-  };
-  tags: string[];
-  markdown: string;
-};
 
 export const uploadImage = async (image: File | null) => {
   if (!image) return;

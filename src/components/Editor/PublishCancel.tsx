@@ -25,13 +25,30 @@ const PublishCancel = ({
   setFileError: (fileError: boolean) => void;
   formReset: () => void;
 }) => {
+  // Global states and setter methods
   const blogTitle = useMarkdownStore((state) => state.blogTitle);
   const tags = useMarkdownStore((state) => state.tags);
   const updateBlogUrl = useMarkdownStore((state) => state.updateBlogUrl);
   const markdown = useMarkdownStore((state) => state.markdown);
   const blogId = useMarkdownStore((state) => state.blogId);
 
+  // Router for handling route dynamically
   const router = useRouter();
+
+  const publishUpdateEvent = () => {
+    // Set the title error if the blog title is empty
+    setTitleError(!blogTitle);
+    // Set the tag error if there are no tags or if the tags array contains an empty string
+    setTagError(!tags || tags.includes("") || tags.length === 0);
+    // Set the file error if there is no file selected
+    setFileError(!file);
+    // Set the markdown error if the markdown text area is empty
+    setMarkdownError(markdown === "");
+    // If there are no errors, generate a blog url by calling the geneteBlogUrl function
+    if (!titleError && !tagError && !fileError) {
+      geneteBlogUrl(updateBlogUrl, blogTitle);
+    }
+  };
 
   return (
     <div className="flex gap-x-5 lg:mt-2">
@@ -39,19 +56,9 @@ const PublishCancel = ({
         type="submit"
         variant="bordered"
         color="primary"
-        onClick={async () => {
-          setTitleError(!blogTitle);
-          setTagError(!tags || tags.includes("") || tags.length === 0);
-          setFileError(!file);
-          setMarkdownError(markdown === "");
-          if (!titleError && !tagError && !fileError) {
-            geneteBlogUrl(updateBlogUrl, blogTitle);
-          }
-        }}
+        onClick={publishUpdateEvent}
       >
-        {
-          blogId ? "Update" : "Publish"
-        }
+        {blogId ? "Update" : "Publish"}
       </Button>
       <Button
         variant="bordered"

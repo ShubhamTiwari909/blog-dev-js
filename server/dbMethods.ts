@@ -12,23 +12,13 @@ import {
   where,
 } from "firebase/firestore";
 import { app } from "./firebaseConfig";
+import { BlogSchema } from "@/types/blog";
 
 const db = getFirestore(app);
 const blogsRef = collection(db, "blogs");
 
-type Blog = {
-  userId: string | null;
-  blogTitle: string;
-  blogUrl: string;
-  image: {
-    name: string;
-    url: string;
-  };
-  tags: string[];
-  markdown: string;
-};
 
-export const writeBlogsToDb = async (blog: Blog) => {
+export const writeBlogsToDb = async (blog: BlogSchema) => {
   try {
     const docRef = await addDoc(blogsRef, blog);
     console.log("Document written with ID: ", docRef.id);
@@ -39,7 +29,7 @@ export const writeBlogsToDb = async (blog: Blog) => {
   }
 };
 
-export const editBlogToDb = async (blog: Blog, blogId: string) => {
+export const editBlogToDb = async (blog: BlogSchema, blogId: string) => {
   try {
     await updateDoc(doc(db, "blogs", blogId), blog);
     console.log("Document Updated with ID: ", blogId);
@@ -62,7 +52,7 @@ export const getBlogsFromDb = async (
 
     const results = querySnapshot.docs.map((doc) => ({
       id: doc.id,
-      ...(doc.data() as Blog),
+      ...(doc.data() as BlogSchema),
     }));
     return results;
   } catch (e) {
@@ -81,7 +71,7 @@ export const getBlogPageData = async (blogUrl: string) => {
   const querySnapshot = await getDocs(q);
   const results = querySnapshot.docs.map((doc) => ({
     id: doc.id,
-    ...(doc.data() as Blog),
+    ...(doc.data() as BlogSchema),
   }));
   return results;
 };
