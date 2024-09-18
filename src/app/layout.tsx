@@ -4,6 +4,7 @@ import "./globals.css";
 import NavbarComponent from "@/components/Navbar";
 import { NextUIProvider } from "@nextui-org/react";
 import QueryClientWrapper from "@/components/Blogs/QueryClientWrapper";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
             </main>
           </NextUIProvider>
         </QueryClientWrapper>
+        <SpeedInsights />
       </body>
     </html>
   );

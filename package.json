@@ -33,6 +33,7 @@
     "@nextui-org/user": "^2.0.33",
     "@tanstack/react-query": "^5.54.1",
     "@uiw/react-md-editor": "^4.0.4",
+    "@vercel/speed-insights": "^1.0.12",
     "firebase": "^10.12.5",
     "framer-motion": "^11.3.24",
     "katex": "^0.16.11",
