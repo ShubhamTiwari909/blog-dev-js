@@ -32,8 +32,8 @@ const FileUpload = ({
             // If there is a file and the file size is valid, set the file errors and the file size error to false
             setFileError(false);
             setFileSizeError(false);
+            setFile(selectedFile);
           }
-          setFile(selectedFile);
         }
       }}
       onBlur={() => {

@@ -179,7 +179,7 @@ const InputGroup = ({
      * If there are errors, it will not trigger any mutation
      */
     mutationFn: async () => {
-      if (!titleError && !tagError && !markdownError) {
+      if (!titleError && !tagError && !markdownError && !fileError) {
         setLoading(true);
         if (blogId) {
           if (!file) {
