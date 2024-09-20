@@ -48,6 +48,11 @@ export default function NavbarComponent({ className }: { className: string }) {
       render: user?.uid,
     },
     {
+      text: "Tags",
+      href: "/blogs/tags",
+      render: user?.uid,
+    },
+    {
       text: "Sign Out",
       render: user?.uid,
       onClick: signOut,
@@ -105,6 +110,20 @@ export default function NavbarComponent({ className }: { className: string }) {
                 onClick={() => updateBlogId("")}
               >
                 Create
+              </Button>
+            </NavbarItem>
+            <NavbarItem className="hidden md:block">
+              <Button
+                as={Link}
+                color="primary"
+                href="/blogs/tags"
+                variant="flat"
+                onClick={() => {
+                  updateBlogId("");
+                  setIsMenuOpen(false);
+                }}
+              >
+                Tags
               </Button>
             </NavbarItem>
             <NavbarItem>

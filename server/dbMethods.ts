@@ -15,6 +15,7 @@ import {
   startAfter,
   limit,
   getCountFromServer,
+  WhereFilterOp,
 } from "firebase/firestore";
 import { app } from "./firebaseConfig";
 import { BlogSchema } from "@/types/blog";
@@ -93,7 +94,7 @@ export const getBlogsFromDb = async (
 };
 
 export const getUserBlogsFromDb = async (
-  userId: string,
+  userId: string | null,
   lastDoc?: DocumentData,
 ) => {
   const results = getBlogsFromDb([where("userId", "==", userId)], lastDoc);
@@ -119,9 +120,31 @@ export const deleteBlogFromDb = async (blogId: string) => {
   }
 };
 
-export const getBlogsCountFromServer = async () => {
-  const q = collection(db, "blogs");
-  const totalCountRef = await getCountFromServer(q);
+export const getBlogsCountFromServer = async (filter?: {
+  filterName?: string;
+  operator?: WhereFilterOp;
+  value?: string;
+}) => {
+  const collectionRef = collection(db, "blogs");
+  let queryRef;
+  if (filter?.filterName && filter?.operator && filter?.value) {
+    queryRef = query(
+      collectionRef,
+      where(filter.filterName, filter.operator, filter.value),
+    );
+  } else {
+    queryRef = query(collectionRef);
+  }
+  const totalCountRef = await getCountFromServer(queryRef);
   const totalCount = totalCountRef.data().count;
+  console.log(totalCount);
   return totalCount;
+};
+
+export const getBlogsFromTags = async (tag: string, lastDoc?: DocumentData) => {
+  const results = getBlogsFromDb(
+    [where("tags", "array-contains-any", [tag])],
+    lastDoc,
+  );
+  return results;
 };

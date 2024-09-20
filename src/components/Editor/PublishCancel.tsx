@@ -41,7 +41,12 @@ const PublishCancel = ({
     // Set the tag error if there are no tags or if the tags array contains an empty string
     setTagError(!tags || tags.includes("") || tags.length === 0);
     // Set the file error if there is no file selected
-    setFileError(!file);
+    if(blogId) {
+      setFileError(false);
+    }
+    else {
+      setFileError(!file);
+    }
     // Set the markdown error if the markdown text area is empty
     setMarkdownError(markdown === "");
     // If there are no errors, generate a blog url by calling the geneteBlogUrl function
