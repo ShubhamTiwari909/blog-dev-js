@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect } from "react";
-import { getBlogsCountFromServer } from "../../server/dbMethods";
-import BlogCard from "./Blogs/BlogCard";
+import { getBlogsCountFromServer } from "../../../server/dbMethods";
+import BlogCard from "../Blogs/BlogCard";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import BlogCardSkeleton from "./Blogs/BlogCardSkeleton";
+import BlogCardSkeleton from "../Blogs/BlogCardSkeleton";
 import { DocumentData, WhereFilterOp } from "firebase/firestore";
 import { usePathname } from "next/navigation";
 import { BlogSchema } from "@/types/blog";
