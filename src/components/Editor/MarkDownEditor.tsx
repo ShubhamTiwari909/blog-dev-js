@@ -11,7 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editBlogToDb, writeBlogsToDb } from "../../../server/dbMethods";
 import { BlogSchema } from "@/types/blog";
 
-const InputGroup = ({
+const MarkDownEditor = ({
   markdownError,
   setMarkdownError,
   setLoading,
@@ -236,4 +236,4 @@ const InputGroup = ({
   );
 };
 
-export default InputGroup;
+export default MarkDownEditor;

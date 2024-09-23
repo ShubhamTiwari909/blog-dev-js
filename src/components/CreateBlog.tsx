@@ -7,7 +7,7 @@ import { getCodeString } from "rehype-rewrite";
 import katex from "katex";
 import "katex/dist/katex.css";
 import { useMarkdownStore } from "@/store/useStore";
-import InputGroup from "@/components/Editor/InputGroup";
+import MarkDownEditor from "@/components/Editor/MarkDownEditor";
 import ProtectedRoute from "./ProtectedRoute";
 import Loading from "@/app/loading";
 import { TextState } from "@uiw/react-md-editor";
@@ -76,7 +76,7 @@ export default function CreateBlog() {
   return (
     <ProtectedRoute>
       <section className="min-h-screen py-20 px-6 lg:px-16">
-        <InputGroup
+        <MarkDownEditor
           markdownError={markdownError}
           setMarkdownError={setMarkdownError}
           setLoading={setLoading}

@@ -10,20 +10,18 @@ const TagBlogs = ({ tagName }: { tagName: string }) => {
   );
 
   return (
-    <div>
-      <BlogsFetch
-        qKey={["tags", tagName]}
-        queryFunction={() =>
-          getBlogsFromTags(tagName.replaceAll("%20", " "), lastDoc)
-        }
-        setLastDoc={setLastDoc}
-        filter={{
-          filterName: "tags",
-          operator: "array-contains",
-          value: tagName.replaceAll("%20", " "),
-        }}
-      />
-    </div>
+    <BlogsFetch
+      qKey={["tags", tagName]}
+      queryFunction={() =>
+        getBlogsFromTags(tagName.replaceAll("%20", " "), lastDoc)
+      }
+      setLastDoc={setLastDoc}
+      filter={{
+        filterName: "tags",
+        operator: "array-contains",
+        value: tagName.replaceAll("%20", " "),
+      }}
+    />
   );
 };
 
