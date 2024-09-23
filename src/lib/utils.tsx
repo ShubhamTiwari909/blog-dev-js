@@ -20,3 +20,4 @@ export const geneteBlogUrl = (
       .slice(0, 20)}-${Math.floor(Math.random() * 1000000000)}`,
   );
 };
+

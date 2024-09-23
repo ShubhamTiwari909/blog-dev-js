@@ -14,6 +14,13 @@ import { Button } from "@nextui-org/button";
 import { logOut, signInWithGooglePopup } from "../../server/auth";
 import { useMarkdownStore } from "@/store/useStore";
 import { useRouter } from "next/navigation";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/dropdown";
+import { ArrowDown } from "lucide-react";
 
 export default function NavbarComponent({ className }: { className: string }) {
   // Local state
@@ -40,11 +47,45 @@ export default function NavbarComponent({ className }: { className: string }) {
     setIsMenuOpen(false);
   };
 
+  const otherLinks = [
+    {
+      key: 1,
+      label: "Globe",
+      href: "/globe",
+    },
+  ];
+
   // Mobile menu links
   const menuItems = [
     {
       text: "Profile",
       href: "/profile",
+      render: user?.uid,
+    },
+    {
+      text: "Tags",
+      href: "/blogs/tags",
+      render: user?.uid,
+    },
+    {
+      text: (
+        <Dropdown>
+          <DropdownTrigger>
+            <Button color="primary" variant="bordered" className="text-blue-200">
+              Others <ArrowDown size="1rem" />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Static Actions">
+            {otherLinks.map((item) => (
+              <DropdownItem key={item.key}>
+                <Link href={item.href}>{item.label}</Link>
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
+      ),
+      href: "#",
+      type: "dropdown",
       render: user?.uid,
     },
     {
@@ -73,54 +114,87 @@ export default function NavbarComponent({ className }: { className: string }) {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        {!user?.uid ? (
-          <NavbarItem>
+        <div className="flex items-center gap-4">
+          <NavbarItem className="hidden md:block">
             <Button
               as={Link}
               color="primary"
-              href="#"
+              href="/blogs/tags"
               variant="flat"
-              onClick={() =>
-                signInWithGooglePopup().then((res) => {
-                  updateUser({
-                    uid: res.user.uid,
-                    displayName: res.user.displayName,
-                    email: res.user.email,
-                    photoURL: res.user.photoURL,
-                  });
-                })
-              }
+              onClick={() => {
+                updateBlogId("");
+                setIsMenuOpen(false);
+              }}
             >
-              Sign Up
+              Tags
             </Button>
           </NavbarItem>
-        ) : (
-          <div className="flex items-center gap-4">
+          {!user?.uid && (
             <NavbarItem>
               <Button
                 as={Link}
                 color="primary"
-                href="/create-blog"
+                href="#"
                 variant="flat"
-                onClick={() => updateBlogId("")}
+                onClick={() =>
+                  signInWithGooglePopup().then((res) => {
+                    updateUser({
+                      uid: res.user.uid,
+                      displayName: res.user.displayName,
+                      email: res.user.email,
+                      photoURL: res.user.photoURL,
+                    });
+                  })
+                }
               >
-                Create
+                Sign Up
               </Button>
             </NavbarItem>
-            <NavbarItem>
-              <Button
-                as={Link}
-                color="primary"
-                href="/profile"
-                variant="flat"
-                onClick={() => {
-                  updateBlogId("");
-                  setIsMenuOpen(false);
-                }}
-              >
-                Profile
+          )}
+          {user?.uid && (
+            <>
+              <NavbarItem>
+                <Button
+                  as={Link}
+                  color="primary"
+                  href="/create-blog"
+                  variant="flat"
+                  onClick={() => updateBlogId("")}
+                >
+                  Create
+                </Button>
+              </NavbarItem>
+              <NavbarItem>
+                <Button
+                  as={Link}
+                  color="primary"
+                  href="/profile"
+                  variant="flat"
+                  onClick={() => {
+                    updateBlogId("");
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  Profile
+                </Button>
+              </NavbarItem>
+            </>
+          )}
+          <Dropdown>
+            <DropdownTrigger className="hidden md:flex">
+              <Button color="primary" variant="flat">
+                Others <ArrowDown size="1rem" />
               </Button>
-            </NavbarItem>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Static Actions">
+              {otherLinks.map((item) => (
+                <DropdownItem key={item.key}>
+                  <Link href={item.href}>{item.label}</Link>
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          {user.uid && (
             <NavbarItem className="hidden md:block">
               <Button
                 as={Link}
@@ -132,25 +206,31 @@ export default function NavbarComponent({ className }: { className: string }) {
                 Logout
               </Button>
             </NavbarItem>
-          </div>
-        )}
+          )}
+        </div>
       </NavbarContent>
       <NavbarMenu className="bg-slate-900/60 text-slate-100 pt-10 space-y-5">
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.text}-${index}`}>
             {item?.render &&
-              (item.href ? (
-                <Link
-                  className={`w-full`}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.text}
-                </Link>
+              (item.type === "dropdown" ? (
+                item.text
               ) : (
-                <Button color="danger" onClick={item.onClick}>
-                  Log out
-                </Button>
+                <>
+                  {item.href ? (
+                    <Link
+                      className={`w-full`}
+                      href={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.text}
+                    </Link>
+                  ) : (
+                    <Button color="danger" onClick={item.onClick}>
+                      Log out
+                    </Button>
+                  )}
+                </>
               ))}
           </NavbarMenuItem>
         ))}

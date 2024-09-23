@@ -63,7 +63,7 @@ const BlogCard = ({
         <Image
           width="400"
           height="224"
-          className="object-center object-cover h-56"
+          className="object-center object-cover h-56 w-full"
           src={image.url}
           alt={blogTitle}
         />
