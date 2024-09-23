@@ -1,6 +1,7 @@
 import { Card, CardBody } from "@nextui-org/card";
 import Link from "next/link";
 import React from "react";
+import Spotlight, { SpotlightCard } from "@/components/SpotLight";
 
 const page = () => {
   const tags = [
@@ -23,11 +24,15 @@ const page = () => {
       <div className="flex flex-wrap gap-10">
         {tags.map((tag) => {
           return (
-            <Card>
-              <CardBody className="min-w-40 text-center">
-                <Link href={`/blogs/tags/${tag}`}>{tag}</Link>
-              </CardBody>
-            </Card>
+            <Spotlight>
+              <SpotlightCard>
+                <Card>
+                  <CardBody className="min-w-40 min-h-20 text-center grid place-items-center">
+                    <Link href={`/blogs/tags/${tag}`}>{tag}</Link>
+                  </CardBody>
+                </Card>
+              </SpotlightCard>
+            </Spotlight>
           );
         })}
       </div>

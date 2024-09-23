@@ -137,7 +137,6 @@ export const getBlogsCountFromServer = async (filter?: {
   }
   const totalCountRef = await getCountFromServer(queryRef);
   const totalCount = totalCountRef.data().count;
-  console.log(totalCount);
   return totalCount;
 };
 

@@ -3,7 +3,7 @@ import React from "react";
 
 const page = ({ params }: { params: { tagBlogs: string } }) => {
   return (
-    <section className="min-h-screen py-10 px-6 lg:px-16">
+    <section className="min-h-screen pb-10 px-6 lg:px-16 w-full">
       <TagBlogs tagName={params.tagBlogs} />
     </section>
   );
