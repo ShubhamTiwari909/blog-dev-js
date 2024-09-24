@@ -15,10 +15,6 @@ import { TextAreaTextApi } from "@uiw/react-md-editor";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
-// Button classes to render in markdown preview
-const customBtnClasses =
-  "[&_div#user-content-custom-link-container>a]:my-2 [&_div#user-content-custom-link-container>a]:no-underline [&_div#user-content-custom-link-container>a]:inline-block [&_div#user-content-custom-link-container>a]:px-4 [&_div#user-content-custom-link-container>a]:py-2 [&_div#user-content-custom-link-container>a]:rounded-xl [&_div#user-content-custom-link-container>a#user-content-custom-link-red]:bg-red-500 [&_div#user-content-custom-link-container>a#user-content-custom-link-green]:bg-green-500 [&_div#user-content-custom-link-container>a#user-content-custom-link-yellow]:bg-yellow-500 [&_div#user-content-custom-link-container>a#user-content-custom-link-pink]:bg-pink-500 [&_div#user-content-custom-link-container>a#user-content-custom-link-purple]:bg-purple-500 [&_div#user-content-custom-link-container>a#user-content-custom-link-blue]:bg-blue-500 [&_div#user-content-custom-link-container>a]:text-white";
-
 export default function CreateBlog() {
   // Local states
   const [markdownError, setMarkdownError] = useState(false);
@@ -27,51 +23,6 @@ export default function CreateBlog() {
   // Global state and its setter method
   const markdown = useMarkdownStore((state) => state.markdown);
   const updateMarkdown = useMarkdownStore((state) => state.updateMarkdown);
-
-  /**
-   * Custom button component for inserting a button link in the markdown editor.
-   * @param {string} btnColor - The color of the button.
-   * @returns {Object} - An object with the name, keyCommand, buttonProps, and execute properties.
-   * The execute function takes in the current state of the markdown editor and the TextAreaTextApi,
-   * and replaces the selected text with a button link.
-   */
-  const CustomButton = (btnColor: string) => {
-    return {
-      name: "Custom Button Link",
-      keyCommand: "customButtonLink",
-      buttonProps: { "aria-label": "Insert Button" },
-      icon: <p>{btnColor}</p>,
-      execute: (state: TextState, api: TextAreaTextApi) => {
-        let modifyText = `\n <div id="custom-link-container"><a target="_blank" id="custom-link-${btnColor}" href="">${state.selectedText}</a></div> \n`;
-        if (!state.selectedText) {
-          modifyText = `\n <div id="custom-link-container"><a target="_blank" id="custom-link-${btnColor}" href="">Button</a></div>\n `;
-        }
-        api.replaceSelection(modifyText);
-      },
-    };
-  };
-
-  /**
-   * Custom component for inserting an inline container in the markdown editor.
-   * @returns {Object} - An object with the name, keyCommand, buttonProps, and execute properties.
-   * The execute function takes in the current state of the markdown editor and the TextAreaTextApi,
-   * and replaces the selected text with an inline container.
-   */
-  const InlineElements = () => {
-    return {
-      name: "Custom Inline Container",
-      keyCommand: "customInlineContainer",
-      buttonProps: { "aria-label": "Insert Inline Container" },
-      icon: <p>Inline</p>,
-      execute: (state: TextState, api: TextAreaTextApi) => {
-        let modifyText = `\n <div id="custom-flex-container">${state.selectedText}</div> \n`;
-        if (!state.selectedText) {
-          modifyText = `\n <div id="custom-flex-container">${state.selectedText}</div> \n `;
-        }
-        api.replaceSelection(modifyText);
-      },
-    };
-  };
 
   return (
     <ProtectedRoute>
@@ -83,7 +34,7 @@ export default function CreateBlog() {
         />
         <div className="container mb-10 mx-auto [&_.w-md-editor-toolbar]:p-3 [&_.w-md-editor-toolbar_li>button]:p-1 [&_.w-md-editor-toolbar_ul]:flex [&_.w-md-editor-toolbar_ul]:flex-wrap [&_.w-md-editor-toolbar_ul:first-child]:mb-4 [&_.w-md-editor-toolbar_ul]:gap-2 [&_.w-md-editor-toolbar-divider]:!mt-1 [&_.w-md-editor-toolbar-divider]:h-5 [&_.w-md-editor-toolbar_button_svg]:w-5 [&_.w-md-editor-toolbar_button_svg]:h-5">
           <MDEditor
-            className={`mdx-editor border transition-all duration-200 ease-in rounded-3xl [&_ul]:list-disc [&_p>span#user-content-hello]:text-red-500 [&_ol]:list-decimal [&_div#user-content-custom-flex-container]:flex [&_div#user-content-custom-flex-container]:gap-3 [&_div#user-content-custom-flex-container]:flex-wrap ${customBtnClasses} ${markdownError ? "focus-within:border-red-600 border-red-600" : "focus-within:border-sky-600 border-sky-600"}`}
+            className={`border transition-all duration-200 ease-in rounded-3xl [&_ul]:list-disc [&_p>span#user-content-hello]:text-red-500 [&_ol]:list-decimal [&_div#user-content-custom-flex-container]:flex [&_div#user-content-custom-flex-container]:gap-3 [&_div#user-content-custom-flex-container]:flex-wrap customBtnClasses ${markdownError ? "focus-within:border-red-600 border-red-600" : "focus-within:border-sky-600 border-sky-600"}`}
             height={550}
             value={markdown}
             onChange={(value) => {
@@ -145,14 +96,9 @@ export default function CreateBlog() {
             }}
             extraCommands={[
               commands.group(
-                [
-                  CustomButton("blue"),
-                  CustomButton("red"),
-                  CustomButton("green"),
-                  CustomButton("purple"),
-                  CustomButton("pink"),
-                  CustomButton("yellow"),
-                ],
+                ["blue", "red", "green", "purple", "pink", "yellow"].map(
+                  (color) => CustomButton(color),
+                ),
                 {
                   name: "Custom Button Link",
                   groupName: "customButtonLink",
@@ -173,3 +119,48 @@ export default function CreateBlog() {
     </ProtectedRoute>
   );
 }
+
+/**
+ * Custom button component for inserting a button link in the markdown editor.
+ * @param {strin g} btnColor - The color of the button.
+ * @returns {Object} - An object with the name, keyCommand, buttonProps, and execute properties.
+ * The execute function takes in the current state of the markdown editor and the TextAreaTextApi,
+ * and replaces the selected text with a button link.
+ */
+const CustomButton = (btnColor: string) => {
+  return {
+    name: "Custom Button Link",
+    keyCommand: "customButtonLink",
+    buttonProps: { "aria-label": "Insert Button" },
+    icon: <p>{btnColor}</p>,
+    execute: (state: TextState, api: TextAreaTextApi) => {
+      let modifyText = `\n <div id="custom-link-container"><a target="_blank" id="custom-link-${btnColor}" href="">${state.selectedText}</a></div> \n`;
+      if (!state.selectedText) {
+        modifyText = `\n <div id="custom-link-container"><a target="_blank" id="custom-link-${btnColor}" href="">Button</a></div>\n `;
+      }
+      api.replaceSelection(modifyText);
+    },
+  };
+};
+
+/**
+ * Custom component for inserting an inline container in the markdown editor.
+ * @returns {Object} - An object with the name, keyCommand, buttonProps, and execute properties.
+ * The execute function takes in the current state of the markdown editor and the TextAreaTextApi,
+ * and replaces the selected text with an inline container.
+ */
+const InlineElements = () => {
+  return {
+    name: "Custom Inline Container",
+    keyCommand: "customInlineContainer",
+    buttonProps: { "aria-label": "Insert Inline Container" },
+    icon: <p>Inline</p>,
+    execute: (state: TextState, api: TextAreaTextApi) => {
+      let modifyText = `\n <div id="custom-flex-container">${state.selectedText}</div> \n`;
+      if (!state.selectedText) {
+        modifyText = `\n <div id="custom-flex-container">${state.selectedText}</div> \n `;
+      }
+      api.replaceSelection(modifyText);
+    },
+  };
+};
