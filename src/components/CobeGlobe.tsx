@@ -4,13 +4,6 @@ import { useEffect, useRef } from "react";
 
 export function Cobe() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const focusRef = useRef([0, 0]);
-  const locationToAngles = (lat: number, long: number) => {
-    return [
-      Math.PI - ((long * Math.PI) / 180 - Math.PI / 2),
-      (lat * Math.PI) / 180,
-    ];
-  };
   useEffect(() => {
     let phi = 0;
     let width = 0;

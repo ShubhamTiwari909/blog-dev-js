@@ -17,45 +17,8 @@ const BlogCard = ({
   blog: BlogSchema;
   userId?: string | null;
 }) => {
-
   // Destructured blog properties
-  const { blogTitle, blogUrl, image, markdown, tags, id } = blog;
-
-  // Local state to toggle the settings of a blog card
-  const [open, setOpen] = React.useState(false);
-
-  // Global states
-  const updateMarkdown = useMarkdownStore((state) => state.updateMarkdown);
-  const updateBlogTitle = useMarkdownStore((state) => state.updateBlogTitle);
-  const updateBlogUrl = useMarkdownStore((state) => state.updateBlogUrl);
-  const updateImage = useMarkdownStore((state) => state.updateImage);
-  const updateTags = useMarkdownStore((state) => state.updateTags);
-  const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
-
-  // Accessing the query client
-  const queryClient = useQueryClient();
-
-  // Mutation for deleting a blog and updating the blogs list
-  const mutation = useMutation({
-    mutationFn: () => deleteBlogFromDb(id as string),
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
-
-      // Deleting thumbnail image from DB
-      deleteImage(image.name);
-    },
-  });
-
-  // Updating form fields with the blog current data
-  const updateBlogFormValues = () => {
-    updateMarkdown(markdown);
-    updateBlogTitle(blogTitle);
-    updateBlogUrl(blogUrl);
-    updateImage(image);
-    updateTags(tags);
-    updateBlogId(id as string);
-  };
+  const { blogTitle, blogUrl, image, tags } = blog;
 
   return (
     <li className="group/blogcard relative flex flex-col items-start justify-between overflow-hidden hover:bg-slate-100 transition-all duration-200 ease-in-out min-w-56 flex-1 lg:flex-auto  rounded-xl border border-blue-400">
@@ -89,6 +52,57 @@ const BlogCard = ({
       >
         Read Blog
       </Link>
+      <FormSettings blog={blog} userId={userId} />
+    </li>
+  );
+};
+
+export default BlogCard;
+
+const FormSettings = ({
+  blog,
+  userId,
+}: {
+  blog: BlogSchema;
+  userId?: string | null;
+}) => {
+  const { blogTitle, blogUrl, image, markdown, tags, id } = blog;
+  // Local state to toggle the settings of a blog card
+  const [open, setOpen] = React.useState(false);
+
+  // Global states
+  const updateMarkdown = useMarkdownStore((state) => state.updateMarkdown);
+  const updateBlogTitle = useMarkdownStore((state) => state.updateBlogTitle);
+  const updateBlogUrl = useMarkdownStore((state) => state.updateBlogUrl);
+  const updateImage = useMarkdownStore((state) => state.updateImage);
+  const updateTags = useMarkdownStore((state) => state.updateTags);
+  const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
+  // Updating form fields with the blog current data
+  const updateBlogFormValues = () => {
+    updateMarkdown(markdown);
+    updateBlogTitle(blogTitle);
+    updateBlogUrl(blogUrl);
+    updateImage(image);
+    updateTags(tags);
+    updateBlogId(id as string);
+  };
+
+  // Accessing the query client
+  const queryClient = useQueryClient();
+
+  // Mutation for deleting a blog and updating the blogs list
+  const mutation = useMutation({
+    mutationFn: () => deleteBlogFromDb(id as string),
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+
+      // Deleting thumbnail image from DB
+      deleteImage(image.name);
+    },
+  });
+  return (
+    <>
       {userId && (
         <div
           className="absolute top-1 right-1 text-right"
@@ -123,8 +137,6 @@ const BlogCard = ({
           ) : null}
         </div>
       )}
-    </li>
+    </>
   );
 };
-
-export default BlogCard;

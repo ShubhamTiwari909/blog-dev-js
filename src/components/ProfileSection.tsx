@@ -1,6 +1,6 @@
 "use client";
 import ProfileCard from "./ProfileCard";
-import BlogsFetch from "./BlogsFetch";
+import BlogsFetch from "./Blogs/BlogsFetch";
 import { useMarkdownStore } from "@/store/useStore";
 import React from "react";
 import { DocumentData } from "firebase/firestore";

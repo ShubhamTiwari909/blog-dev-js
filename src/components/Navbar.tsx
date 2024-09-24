@@ -12,7 +12,7 @@ import {
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import { logOut, signInWithGooglePopup } from "../../server/auth";
-import { useMarkdownStore } from "@/store/useStore";
+import { useMarkdownStore, User } from "@/store/useStore";
 import { useRouter } from "next/navigation";
 import {
   Dropdown,
@@ -22,41 +22,17 @@ import {
 } from "@nextui-org/dropdown";
 import { ArrowDown } from "lucide-react";
 
-export default function NavbarComponent({ className }: { className: string }) {
-  // Local state
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+const otherLinks = [
+  {
+    key: 1,
+    label: "Globe",
+    href: "/globe",
+  },
+];
 
-  // Global state and its setter method
-  const updateUser = useMarkdownStore((state) => state.updateUser);
-  const user = useMarkdownStore((state) => state.user);
-  const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
-
-  // Router for handling route dynamically
-  const router = useRouter();
-
-  const signOut = () => {
-    logOut().then(() => {
-      updateUser({
-        uid: "",
-        displayName: "",
-        email: "",
-        photoURL: "",
-      });
-      router.push("/");
-    });
-    setIsMenuOpen(false);
-  };
-
-  const otherLinks = [
-    {
-      key: 1,
-      label: "Globe",
-      href: "/globe",
-    },
-  ];
-
-  // Mobile menu links
-  const menuItems = [
+// Mobile menu links
+const menuItems = (user: User, signOut: () => void) => {
+  return [
     {
       text: "Profile",
       href: "/profile",
@@ -71,7 +47,11 @@ export default function NavbarComponent({ className }: { className: string }) {
       text: (
         <Dropdown>
           <DropdownTrigger>
-            <Button color="primary" variant="bordered" className="text-blue-200">
+            <Button
+              color="primary"
+              variant="bordered"
+              className="text-blue-200"
+            >
               Others <ArrowDown size="1rem" />
             </Button>
           </DropdownTrigger>
@@ -94,6 +74,42 @@ export default function NavbarComponent({ className }: { className: string }) {
       onClick: signOut,
     },
   ];
+};
+
+export default function NavbarComponent({ className }: { className: string }) {
+  // Local state
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  // Global state and its setter method
+  const updateUser = useMarkdownStore((state) => state.updateUser);
+  const user = useMarkdownStore((state) => state.user);
+  const updateBlogId = useMarkdownStore((state) => state.updateBlogId);
+
+  // Router for handling route dynamically
+  const router = useRouter();
+
+  const googleSignIn = () =>
+    signInWithGooglePopup().then((res) => {
+      updateUser({
+        uid: res.user.uid,
+        displayName: res.user.displayName,
+        email: res.user.email,
+        photoURL: res.user.photoURL,
+      });
+    });
+
+  const signOut = () => {
+    logOut().then(() => {
+      updateUser({
+        uid: "",
+        displayName: "",
+        email: "",
+        photoURL: "",
+      });
+      router.push("/");
+    });
+    setIsMenuOpen(false);
+  };
 
   return (
     <Navbar
@@ -129,28 +145,6 @@ export default function NavbarComponent({ className }: { className: string }) {
               Tags
             </Button>
           </NavbarItem>
-          {!user?.uid && (
-            <NavbarItem>
-              <Button
-                as={Link}
-                color="primary"
-                href="#"
-                variant="flat"
-                onClick={() =>
-                  signInWithGooglePopup().then((res) => {
-                    updateUser({
-                      uid: res.user.uid,
-                      displayName: res.user.displayName,
-                      email: res.user.email,
-                      photoURL: res.user.photoURL,
-                    });
-                  })
-                }
-              >
-                Sign Up
-              </Button>
-            </NavbarItem>
-          )}
           {user?.uid && (
             <>
               <NavbarItem>
@@ -194,6 +188,19 @@ export default function NavbarComponent({ className }: { className: string }) {
               ))}
             </DropdownMenu>
           </Dropdown>
+          {!user?.uid && (
+            <NavbarItem>
+              <Button
+                as={Link}
+                color="primary"
+                href="#"
+                variant="flat"
+                onClick={googleSignIn}
+              >
+                Sign Up
+              </Button>
+            </NavbarItem>
+          )}
           {user.uid && (
             <NavbarItem className="hidden md:block">
               <Button
@@ -210,7 +217,7 @@ export default function NavbarComponent({ className }: { className: string }) {
         </div>
       </NavbarContent>
       <NavbarMenu className="bg-slate-900/60 text-slate-100 pt-10 space-y-5">
-        {menuItems.map((item, index) => (
+        {menuItems(user, signOut).map((item, index) => (
           <NavbarMenuItem key={`${item.text}-${index}`}>
             {item?.render &&
               (item.type === "dropdown" ? (

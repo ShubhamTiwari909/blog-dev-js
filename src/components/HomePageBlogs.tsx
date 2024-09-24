@@ -2,7 +2,7 @@
 import React from "react";
 import { getBlogsFromDb } from "../../server/dbMethods";
 import { DocumentData } from "firebase/firestore";
-import BlogsFetch from "./BlogsFetch";
+import BlogsFetch from "./Blogs/BlogsFetch";
 
 const HomePageBlogs = () => {
   const [lastDoc, setLastDoc] = React.useState<DocumentData | undefined>(
