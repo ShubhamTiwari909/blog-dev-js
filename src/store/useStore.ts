@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-type User = {
+export type User = {
   uid: string | null;
   displayName: string | null;
   email: string | null;
