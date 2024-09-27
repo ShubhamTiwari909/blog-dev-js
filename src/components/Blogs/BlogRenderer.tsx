@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import MarkdownRenderer from "../MarkdownRenderer";
 import { useQuery } from "@tanstack/react-query";
 import { getBlogPageData } from "../../../server/dbMethods";
@@ -12,6 +12,10 @@ const BlogRenderer = ({ blogUrl }: { blogUrl: string }) => {
     queryKey: ["blog", blogUrl],
     queryFn: () => getBlogPageData(blogUrl.replace("/blogs/", "")),
   });
+
+  useEffect(() => {
+    
+  }, [blogUrl]);
 
   return (
     <div className="container lg:max-w-[1200px] mx-auto py-10 lg:py-16">

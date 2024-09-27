@@ -8,5 +8,9 @@ export type BlogSchema = {
   };
   tags: string[];
   markdown: string;
-  id?:string
+  id?:string;
+  createdAt?: {
+    seconds: number;
+    nanoseconds: number;
+  }
 };

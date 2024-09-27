@@ -54,9 +54,9 @@ export const getBlogsFromDb = async (
   lastDoc?: DocumentData,
 ) => {
   try {
-    let q;
+    let queries;
     if (lastDoc) {
-      q = query(
+      queries = query(
         blogsRef,
         orderBy("createdAt", "desc"),
         startAfter(lastDoc?.data()?.createdAt),
@@ -64,14 +64,14 @@ export const getBlogsFromDb = async (
         ...(filter ?? []),
       );
     } else {
-      q = query(
+      queries = query(
         blogsRef,
         orderBy("createdAt", "desc"),
         limit(1),
         ...(filter ?? []),
       );
     }
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(queries);
 
     const results = querySnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -98,6 +98,14 @@ export const getUserBlogsFromDb = async (
   lastDoc?: DocumentData,
 ) => {
   const results = getBlogsFromDb([where("userId", "==", userId)], lastDoc);
+  return results;
+};
+
+export const getBlogsFromTags = async (tag: string, lastDoc?: DocumentData) => {
+  const results = getBlogsFromDb(
+    [where("tags", "array-contains-any", [tag])],
+    lastDoc,
+  );
   return results;
 };
 
@@ -140,10 +148,3 @@ export const getBlogsCountFromServer = async (filter?: {
   return totalCount;
 };
 
-export const getBlogsFromTags = async (tag: string, lastDoc?: DocumentData) => {
-  const results = getBlogsFromDb(
-    [where("tags", "array-contains-any", [tag])],
-    lastDoc,
-  );
-  return results;
-};

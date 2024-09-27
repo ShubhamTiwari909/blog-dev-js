@@ -56,6 +56,7 @@ const BlogsFetch = ({
     initialPageParam: undefined,
     getPreviousPageParam: (firstPage) => firstPage.firstVisibleDoc,
     getNextPageParam: (lastPage) => lastPage.lastVisibleDoc,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -69,6 +70,8 @@ const BlogsFetch = ({
       });
     }
   }, [queryInfinite.data?.pages]);
+
+
   return (
     <div className="flex-1">
       <ul

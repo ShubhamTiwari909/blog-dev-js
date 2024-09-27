@@ -23,8 +23,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryClientWrapper>
           <NextUIProvider>
-            <NavbarComponent className="dark text-foreground bg-slate-900" />
-            <main className="dark text-foreground bg-background min-h-screen">
+            <NavbarComponent className="dark text-foreground bg-dark-900" />
+            <main className="dark text-foreground bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 min-h-screen">
               {children}
             </main>
           </NextUIProvider>

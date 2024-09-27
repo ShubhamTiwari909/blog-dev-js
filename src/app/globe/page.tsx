@@ -9,7 +9,7 @@ const Cobeglobedemo = () => {
         words="Write your blog from anywhere"
         className="text-balance"
       />
-      <div className="items-center justify-center md:h-auto dark:bg-black bg-white relative w-full">
+      <div className="items-center justify-center md:h-auto relative w-full">
         <Cobe />
       </div>
     </section>
