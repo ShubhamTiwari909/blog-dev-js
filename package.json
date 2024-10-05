@@ -9,7 +9,7 @@
     "format": "npx prettier . --write"
   },
   "dependencies": {
-    "@nextui-org/accordion": "^2.0.38",
+    "@nextui-org/accordion": "^2.0.39",
     "@nextui-org/autocomplete": "^2.1.5",
     "@nextui-org/avatar": "^2.0.32",
     "@nextui-org/badge": "^2.0.31",
